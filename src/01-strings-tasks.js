@@ -206,19 +206,19 @@ function getRectangleString(width, height) {
   let result = '';
   for (let i = 1; i <= height; i += 1) {
     for (let k = 1; k <= width; k += 1) {
-      if (i == 1 && k == 1) {
+      if (i === 1 && k === 1) {
         result += '┌';
-      } else if (i == 1 && k == width) {
+      } else if (i === 1 && k === width) {
         result += '┐\n';
-      } else if ((i == 1 || i == height) && k != 1 && k != width) {
+      } else if ((i === 1 || i === height) && k !== 1 && k !== width) {
         result += '─';
-      } else if (i != 1 && i != height && k == 1) {
+      } else if (i !== 1 && i !== height && k === 1) {
         result += '│';
-      } else if (i != 1 && i != height && k == width) {
+      } else if (i !== 1 && i !== height && k === width) {
         result += '│\n';
-      } else if (i == height && k == 1) {
+      } else if (i === height && k === 1) {
         result += '└';
-      } else if (i == height && k == width) {
+      } else if (i === height && k === width) {
         result += '┘\n';
       } else {
         result += ' ';
@@ -248,16 +248,16 @@ function getRectangleString(width, height) {
 function encodeToRot13(str) {
   const alphabet = 'abcdefghijklmnopqrstuvwxyz';
   let result = '';
-  for (let char of str) {
+  str.split('').forEach((char) => {
     if (alphabet.indexOf(char.toLowerCase()) === -1) {
       result += char;
     } else {
-      const isUpper = char.toUpperCase() === char ? true : false;
+      const isUpper = char.toUpperCase() === char;
       const charNumber = alphabet.indexOf(char.toLowerCase());
       const cipherChar = charNumber < 13 ? alphabet[charNumber + 13] : alphabet[charNumber - 13];
       result += isUpper ? cipherChar.toUpperCase() : cipherChar;
     }
-  }
+  });
   return result;
 }
 
@@ -275,7 +275,7 @@ function encodeToRot13(str) {
  *   isString(new String('test')) => true
  */
 function isString(value) {
-  if (!value  || (typeof value === 'object' && !(value instanceof String))) {
+  if (!value || (typeof value === 'object' && !(value instanceof String))) {
     return false;
   }
   return true;
@@ -306,8 +306,14 @@ function isString(value) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  const deck = [
+    'A♣', '2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', '10♣', 'J♣', 'Q♣', 'K♣',
+    'A♦', '2♦', '3♦', '4♦', '5♦', '6♦', '7♦', '8♦', '9♦', '10♦', 'J♦', 'Q♦', 'K♦',
+    'A♥', '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', '10♥', 'J♥', 'Q♥', 'K♥',
+    'A♠', '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', '10♠', 'J♠', 'Q♠', 'K♠',
+  ];
+  return deck.indexOf(value);
 }
 
 
