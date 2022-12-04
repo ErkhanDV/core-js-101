@@ -114,33 +114,116 @@ function fromJSON(proto, json) {
  *  For more examples see unit tests.
  */
 
+class MySuperBaseElementSelector {
+  constructor() {
+    this.selector = [];
+  }
+
+  stringify() {
+    return this.selector.join('');
+  }
+
+  element(value) {
+    if (this.elementStack) {
+      // eslint-disable-next-line no-throw-literal
+      throw 'Element, id and pseudo-element should not occur more then one time inside the selector';
+    }
+    if (this.idStack || this.classStack || this.attrStack
+      || this.pseudoClassStack || this.pseudoElementStack) {
+      // eslint-disable-next-line no-throw-literal
+      throw 'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element';
+    }
+    this.elementStack = true;
+    this.selector.push(`${value}`);
+    return this;
+  }
+
+  id(element) {
+    if (this.idStack) {
+      // eslint-disable-next-line no-throw-literal
+      throw 'Element, id and pseudo-element should not occur more then one time inside the selector';
+    }
+    if (this.classStack || this.attrStack || this.pseudoClassStack || this.pseudoElementStack) {
+      // eslint-disable-next-line no-throw-literal
+      throw 'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element';
+    }
+    this.idStack = true;
+    this.selector.push(`#${element}`);
+    return this;
+  }
+
+  class(element) {
+    if (this.attrStack || this.pseudoClassStack || this.pseudoElementStack) {
+      // eslint-disable-next-line no-throw-literal
+      throw 'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element';
+    }
+    this.classStack = true;
+    this.selector.push(`.${element}`);
+    return this;
+  }
+
+  attr(element) {
+    if (this.pseudoClassStack || this.pseudoElementStack) {
+      // eslint-disable-next-line no-throw-literal
+      throw 'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element';
+    }
+    this.attrStack = true;
+    this.selector.push(`[${element}]`);
+    return this;
+  }
+
+  pseudoClass(element) {
+    if (this.pseudoElementStack) {
+      // eslint-disable-next-line no-throw-literal
+      throw 'Selector parts should be arranged in the following order: element, id, class, attribute, pseudo-class, pseudo-element';
+    }
+    this.pseudoClassStack = true;
+    this.selector.push(`:${element}`);
+    return this;
+  }
+
+  pseudoElement(element) {
+    if (this.pseudoElementStack) {
+      // eslint-disable-next-line no-throw-literal
+      throw 'Element, id and pseudo-element should not occur more then one time inside the selector';
+    }
+    this.pseudoElementStack = true;
+    this.selector.push(`::${element}`);
+    return this;
+  }
+
+  combine(selector1, combinator, selector2) {
+    this.selector.push(selector1.stringify(), ` ${combinator} `, selector2.stringify());
+    return this;
+  }
+}
 const cssSelectorBuilder = {
-  element(/* value */) {
-    throw new Error('Not implemented');
+  element(value) {
+    return new MySuperBaseElementSelector().element(value);
   },
 
-  id(/* value */) {
-    throw new Error('Not implemented');
+  id(value) {
+    return new MySuperBaseElementSelector().id(value);
   },
 
-  class(/* value */) {
-    throw new Error('Not implemented');
+  class(value) {
+    return new MySuperBaseElementSelector().class(value);
   },
 
-  attr(/* value */) {
-    throw new Error('Not implemented');
+  attr(value) {
+    return new MySuperBaseElementSelector().attr(value);
   },
 
-  pseudoClass(/* value */) {
-    throw new Error('Not implemented');
+  pseudoClass(value) {
+    return new MySuperBaseElementSelector().pseudoClass(value);
   },
 
-  pseudoElement(/* value */) {
-    throw new Error('Not implemented');
+  pseudoElement(value) {
+    return new MySuperBaseElementSelector().pseudoElement(value);
   },
 
-  combine(/* selector1, combinator, selector2 */) {
-    throw new Error('Not implemented');
+  combine(selector1, combinator, selector2) {
+    return new MySuperBaseElementSelector().combine(selector1, combinator, selector2);
   },
 };
 
