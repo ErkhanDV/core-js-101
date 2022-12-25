@@ -429,8 +429,20 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+  for (let i = 0; i < m1.length; i += 1) {
+    const row = [];
+    for (let j = 0; j < m1.length; j += 1) {
+      const matrixElement = [];
+      for (let k = 0; k < m2.length; k += 1) {
+        matrixElement.push(m1[i][k] * m2[k][j]);
+      }
+      row.push(matrixElement.reduce((acc, curr) => acc + curr));
+    }
+    result.push(row);
+  }
+  return result;
 }
 
 
@@ -464,8 +476,31 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const fullPosition = [];
+  position.forEach((row) => {
+    while (row.length < 3) {
+      row.push(undefined);
+    }
+    fullPosition.push(row);
+  });
+  const winIndexes = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6],
+  ];
+  const stringMatrix = fullPosition.flat();
+  let winner;
+  // eslint-disable-next-line consistent-return
+  for (let i = 0; i < winIndexes.length; i += 1) {
+    if (stringMatrix[winIndexes[i][0]] === '0' && stringMatrix[winIndexes[i][1]] === '0' && stringMatrix[winIndexes[i][2]] === '0') {
+      winner = '0';
+      break;
+    }
+    if (stringMatrix[winIndexes[i][0]] === 'X' && stringMatrix[winIndexes[i][1]] === 'X' && stringMatrix[winIndexes[i][2]] === 'X') {
+      winner = 'X';
+      break;
+    }
+  }
+  return winner;
 }
 
 
